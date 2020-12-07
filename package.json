@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Samicap/tinyapp/issues"
   },
-  "homepage": "https://github.com/Samicap/tinyapp#readme"
+  "homepage": "https://github.com/Samicap/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
