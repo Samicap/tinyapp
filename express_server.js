@@ -3,8 +3,10 @@ const app = express();
 const PORT = 8080; // default port 8080
 
 function generateRandomString() {
-
+  let randomString = Math.random().toString(36).substring(6);
+  return randomString;
 };
+
 
 app.set("view engine", "ejs");
 
@@ -49,7 +51,7 @@ app.get("/hello", (req, res) => {
 
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  res.send(generateRandomString());         // Respond with 'Ok' (we will replace this)
 });
 
 app.listen(PORT, () => {
