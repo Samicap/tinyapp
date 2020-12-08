@@ -55,6 +55,7 @@ app.post("/urls", (req, res) => {
   res.send(generateRandomString());
   const templateVars = { shortURL: res.body, longURL: req.body[longURL]} // trying to save the shortURL procuced. doesnt work.
   res.render("urls_show", templateVars)     // Respond with 'Ok' (we will replace this)
+  // res.send(":shortURL"); // hopefully redirects client to url provided
 });
 
 app.listen(PORT, () => {
