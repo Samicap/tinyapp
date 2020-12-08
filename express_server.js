@@ -49,13 +49,17 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
+
+app.get("/u/:shortURL", (req, res) => {
+  const longURl = req.body;
+  res.redirect(longURL);
+});
+
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
-  // console.log(res);
-  res.send(generateRandomString());
-  const templateVars = { shortURL: res.body, longURL: req.body[longURL]} // trying to save the shortURL procuced. doesnt work.
-  res.render("urls_show", templateVars)     // Respond with 'Ok' (we will replace this)
-  // res.send(":shortURL"); // hopefully redirects client to url provided
+  const newShortURL = generateRandomString();  // Generates random string for a key
+  const newLongURL = req.body.longURL;  // creates new vale for longURL
+  urlDatabase[newShortURL] = newLongURL; // assigns newly created key: value pair to urlDatabase object
+  res.redirect(`/urls/${newShortURL}`);  // redirects to :shortURL page
 });
 
 app.listen(PORT, () => {
