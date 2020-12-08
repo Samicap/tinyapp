@@ -7,10 +7,6 @@ function generateRandomString() {
   return randomString;
 };
 
-const removeURL = (urlDatabase, shortURL) => {
-  delete urlDatabase[shortURL];
-};
-
 app.set("view engine", "ejs");
 
 const urlDatabase = {
@@ -74,9 +70,8 @@ app.get("/u/:shortURL", (req, res) => {
 
 // });
 
-app.post("/urls/:shortURL/delete", (req, res) => {  
-  const shortURL = req.params.shortURL;
-  console.log(shortURL);
+app.post("/urls/:shortURL/delete", (req, res) => {  // deletes urls
+  const shortURL = req.params.shortURL; // accesses keys in urlDatabase
   delete urlDatabase[shortURL]
   res.redirect('/urls');
 });
