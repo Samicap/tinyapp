@@ -56,14 +56,11 @@ app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;  // creates new vale for longURL
   urlDatabase[shortURL] = longURL; // assigns newly created key: value pair to urlDatabase object
   res.redirect(`/urls/${shortURL}`);  // redirects to :shortURL page
-  // console.log(req.params)
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  console.log(req.params.shortURL)
   const shortURL = req.params.shortURL // this gets the :shortURL
   const longURL = urlDatabase[shortURL]; // How to do i get the long url?
-  console.log(longURL)
   res.redirect(longURL);
 });
 
