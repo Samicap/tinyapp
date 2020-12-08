@@ -7,6 +7,9 @@ function generateRandomString() {
   return randomString;
 };
 
+const removeURL = (urlDatabase, shortURL) => {
+  delete urlDatabase[shortURL];
+};
 
 app.set("view engine", "ejs");
 
@@ -62,6 +65,20 @@ app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL // this gets the :shortURL
   const longURL = urlDatabase[shortURL]; // How to do i get the long url?
   res.redirect(longURL);
+});
+
+// Update 
+// app.post("/urls", (req, res) => {
+//   const shortURl = 
+//   const new
+
+// });
+
+app.post("/urls/:shortURL/delete", (req, res) => {  
+  const shortURL = req.params.shortURL;
+  console.log(shortURL);
+  delete urlDatabase[shortURL]
+  res.redirect('/urls');
 });
 
 app.listen(PORT, () => {
