@@ -51,7 +51,10 @@ app.get("/hello", (req, res) => {
 
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
-  res.send(generateRandomString());         // Respond with 'Ok' (we will replace this)
+  // console.log(res);
+  res.send(generateRandomString());
+  const templateVars = { shortURL: res.body, longURL: req.body[longURL]} // trying to save the shortURL procuced. doesnt work.
+  res.render("urls_show", templateVars)     // Respond with 'Ok' (we will replace this)
 });
 
 app.listen(PORT, () => {
