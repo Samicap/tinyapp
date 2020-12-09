@@ -68,19 +68,20 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  console.log(res)
+  // console.log(res)
   const templateVars = {username: req.cookies['username']}
   res.render("urls_register", templateVars);
 });
 
 app.post("/register", (req, res) => {
-  console.log(req);
-  const key = [generateRandomString()]
-  users['key'] = {
-    id: key,
+  console.log(req.body);
+  const newUserID = [generateRandomString()]
+  users['newUserID'] = {
+    id: newUserID,
     email: req.body['email'],
     password: req.body['password']
   };
+  console.log(users);
   res.redirect('/urls');
 });
 
