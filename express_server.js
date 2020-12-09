@@ -41,12 +41,12 @@ app.get("/", (req, res) => {
 
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase, username: req.cookies['username']};
+  const templateVars = { urls: urlDatabase, users: req.cookies["user_id"]};
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = {username: req.cookies['username']};
+  const templateVars = {users: req.cookies["user_id"]};
   res.render("urls_new", templateVars);
 });
 
@@ -55,7 +55,7 @@ app.get("/urls/:shortURL", (req, res) => {
   // const templateVars = { shortURL: req.params.shortURL, longURL: req.params.longURL };
   let s = req.params.shortURL;
   // console.log(s);
-  const templateVars = { shortURL: s, longURL: urlDatabase[s], username: req.cookies['username'] };
+  const templateVars = { shortURL: s, longURL: urlDatabase[s], users: req.cookies["user_id"] };
   res.render("urls_show", templateVars);
 });
 
@@ -69,19 +69,20 @@ app.get("/hello", (req, res) => {
 
 app.get("/register", (req, res) => {
   // console.log(res)
-  const templateVars = {username: req.cookies['username']}
+  const templateVars = {users: req.cookies[userID]}
   res.render("urls_register", templateVars);
 });
 
 app.post("/register", (req, res) => {
-  console.log(req.body);
-  const newUserID = [generateRandomString()]
-  users['newUserID'] = {
-    id: newUserID,
+  const userID = generateRandomString();
+  users[userID] = {
+    id: userID,
     email: req.body['email'],
     password: req.body['password']
   };
   console.log(users);
+  res.cookie('userID', userID)
+  console.log(req)
   res.redirect('/urls');
 });
 
@@ -94,15 +95,22 @@ app.post("/urls", (req, res) => {
 
 
 app.post("/login", (req, res) => {
-  console.log(req.body);
-  const username = req.body.username;
-  if (username) {
-    res.cookie('username', username);
+  let username = req.body.username;
+  let result = getUser(username);
+  if (result) {
+    res.cookie('user_id', result);
     res.redirect(`/urls`);
   } else {
     res.send("FAILED LOGIN");
   }
 });
+function getUser(email){
+  for(let key in users){
+    if(users[key].email === email){
+      return users[key];
+    }
+  }
+}
 
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL // this gets the :shortURL
