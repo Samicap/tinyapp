@@ -73,6 +73,16 @@ app.get("/register", (req, res) => {
   res.render("urls_register", templateVars);
 });
 
+app.post("/register", (req, res) => {
+  console.log(req);
+  const key = [generateRandomString()]
+  users['key'] = {
+    id: key,
+    email: req.body['email'],
+    password: req.body['password']
+  };
+  res.redirect('/urls');
+});
 
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();  // Generates random string for a key
