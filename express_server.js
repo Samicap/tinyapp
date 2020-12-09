@@ -55,6 +55,11 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
+app.get("/register", (req, res) => {
+  console.log(res)
+  const templateVars = {username: req.cookies['username']}
+  res.render("urls_register", templateVars);
+});
 
 
 app.post("/urls", (req, res) => {
@@ -63,6 +68,7 @@ app.post("/urls", (req, res) => {
   urlDatabase[shortURL] = longURL; // assigns newly created key: value pair to urlDatabase object
   res.redirect(`/urls/${shortURL}`);  // redirects to :shortURL page
 });
+
 
 app.post("/login", (req, res) => {
   console.log(req.body);
