@@ -14,6 +14,8 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+
+
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -35,7 +37,7 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:shortURL", (req, res) => {
   // const templateVars = { shortURL: req.params.shortURL, longURL: req.params.longURL };
   let s = req.params.shortURL;
-  console.log(s);
+  // console.log(s);
   const templateVars = { shortURL: s, longURL: urlDatabase[s] };
   res.render("urls_show", templateVars);
 });
@@ -64,17 +66,23 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 // Update 
-// app.post("/urls", (req, res) => {
-//   const shortURl = 
-//   const new
+app.post("/urls/:shortURL/update", (req, res) => {
+  console.log(req) // prints out the whole page behind the scenes in the terminal
+  const shortURL = req.params.shortURL;
+  console.log(`Same shortURL: ${shortURL}`);
+  const longURL = req.body.longURL;
+  // res.send(`Updated long URL: ${longURL}`); // had it print out for the user to see
+  urlDatabase[shortURL] = longURL;
+  res.redirect('/urls');
 
-// });
+});
 
 app.post("/urls/:shortURL/delete", (req, res) => {  // deletes urls
   const shortURL = req.params.shortURL; // accesses keys in urlDatabase
   delete urlDatabase[shortURL]
   res.redirect('/urls');
 });
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
