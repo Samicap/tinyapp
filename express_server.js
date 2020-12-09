@@ -9,6 +9,7 @@ function generateRandomString() {
 };
 
 app.set("view engine", "ejs");
+app.use(cookieParser());
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -58,6 +59,17 @@ app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;  // creates new vale for longURL
   urlDatabase[shortURL] = longURL; // assigns newly created key: value pair to urlDatabase object
   res.redirect(`/urls/${shortURL}`);  // redirects to :shortURL page
+});
+
+app.post("/urls/login", (req, res) => {
+  console.log(req.body);
+  const user = req.body.username;
+  if (user) {
+    res.cookie(user);
+    res.redirect(`/urls`);
+  } else {
+    res.send("FAILED LOGIN");
+  }
 });
 
 app.get("/u/:shortURL", (req, res) => {
