@@ -12,9 +12,9 @@
       </div>
     </div>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <% if (cookieUser) { %>
+      <% if (userObject) { %>
         <form class="form-inline" action="/logout" method="POST">
-          <label for="username">Logged in as <%= cookieUser.email%></label>
+          <label for="username">Logged in as <%= userObject.email%></label>
           <button type="submit" class="btn btn-primary">Log Out</button>
         </form>
         <% } else { %>
