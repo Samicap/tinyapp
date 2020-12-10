@@ -45,6 +45,16 @@ const addNewUser = function(email, password) {
   return userID;
 };
 
+// const isUserLoggedIn = function(users, templateVars) {
+//   for (let keys in users) {
+//     if (users[keys].id === templateVars.cookieUser){
+//       return true;
+//     } else {
+//     return false;
+//     }
+//   }
+// };
+
 const getUser = function(email, password){
   for(let key in users){ // key = string index of users
     if(users[key].email === email && password !== ""){
@@ -57,6 +67,7 @@ const getUser = function(email, password){
     }
   }
 };
+
 
 const userEmailExists = function(email) {
   for (const [id, user] of Object.entries(users)) {  // Iterates over the objects of object users
@@ -75,13 +86,29 @@ app.get("/", (req, res) => {
 
 
 app.get("/urls", (req, res) => {
-  const templateVars = {urls: urlDatabase, cookieUser: req.cookies["user_id"]};
+  const user = users[req.cookies['user_id']];
+  const templateVars = {urls: urlDatabase, cookieUser: user};
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = {cookieUser: req.cookies["user_id"]};
+  const user = users[req.cookies['user_id']];
+  // if (!user) {
+  //   res.redirect("/login");
+  //   return;
+  // }
+  const templateVars = {cookieUser: user};
   res.render("urls_new", templateVars);
+  // for (key in users) {
+  //   console.log(users[key]['id']);
+  //   console.log(templateVars.cookieUser)
+  //   if (users[key]['id'] === templateVars.cookieUser) {
+  //     console.log(true);
+  //     res.render("urls_new", templateVars);
+  //   } else if (users[key]['id'] !== templateVars.cookieUser) {
+  //     res.redirect("/login");
+  //   }
+  // }
 });
 
 
@@ -115,8 +142,6 @@ app.post("/register", (req, res) => {
     res.status(400).send("User email already exists. Try logging in. Status code 400.")
   } else {
     let userID = addNewUser(email=req.body["email"], password=req.body["password"])
-
-    console.log(users);
     res.cookie('user_id', userID) // Sets the user object to a cookie
     res.redirect('/urls');
   }
