@@ -118,7 +118,8 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
   let username = req.body["email"];
-  let result = getUser(username);
+  let password = req.body["password"];
+  let result = getUser(username, password);
 
   if (result) {
     res.cookie('user_id', result);
@@ -127,14 +128,14 @@ app.post("/login", (req, res) => {
     res.send("FAILED LOGIN");
   }
 });
-function getUser(email){
-  for(let key in users){
-    if(users[key].email === email){
+function getUser(email, password){
+  for(let key in users){ // key = string index of users
+    if(users[key].email === email && users[key].password === password){
       console.log(users[key].email, email)
       return users[key];
     }
   }
-}
+};
 
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL // this gets the :shortURL
