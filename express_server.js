@@ -30,6 +30,14 @@ const users = {
 
 };
 
+const userExists = function(email) {
+  for (const [id, user] of Object.entries(users)) {
+    if (email === user.email){
+      return true
+    }
+  }
+  return false
+};
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
@@ -77,16 +85,9 @@ app.post("/register", (req, res) => {
   if (req.body['email'] === "" || req.body['password'] === "") { // if the user enters an empty field its rejected
     let userError = req.body.statusCode = 400; // Resets the status code of the page
     res.send(`Status Code: ${userError}`);
+  } else if (userExists(req.body["email"])){
+    res.send("Status Code: 400. User email already taken");
   } else {
-    
-      for (let key in users) {
-        console.log(key)
-        let insideKeys = users[key];
-        // for (let email in insideKeys) {
-          //   if (email === req.body['email']) {
-        //     res.send('Status Code: 400.  User email already taken.');
-        //   }
-        // }
 
     const userID = generateRandomString(); // Creates a new user in the Users object
     users[userID] = {
@@ -97,11 +98,7 @@ app.post("/register", (req, res) => {
     console.log(users);
     res.cookie('userID', userID) // Sets the user object to a cookie
     res.redirect('/urls');
-    }
-
-} 
-  
-
+  }
 });
 
 app.post("/urls", (req, res) => {
