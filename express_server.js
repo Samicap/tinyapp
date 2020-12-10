@@ -74,16 +74,21 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  const userID = generateRandomString();
-  users[userID] = {
-    id: userID,
-    email: req.body['email'],
-    password: req.body['password']
-  };
-  console.log(users);
-  res.cookie('userID', userID)
-  console.log(req)
-  res.redirect('/urls');
+  if (req.body['email'] === "" || req.body['password'] === "") {
+    res.send('StatusCode: 400');
+    // if (req.body['email'=== users.);
+  } else {
+    
+    const userID = generateRandomString(); // Creates a new user in the Users object
+    users[userID] = {
+      id: userID,
+      email: req.body['email'],
+      password: req.body['password']
+    };
+    console.log(users);
+    res.cookie('userID', userID) // Sets the user object to a cookie
+    res.redirect('/urls');
+  }
 });
 
 app.post("/urls", (req, res) => {
@@ -130,7 +135,7 @@ app.post("/urls/:shortURL/update", (req, res) => {
 
 });
 app.post("/logout", (req, res) => {
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect("/urls");
 });
 
