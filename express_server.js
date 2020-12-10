@@ -33,14 +33,16 @@ function generateRandomString() {
   return randomString;
 };
 
-// const addNewUser = function(email, password) {
-//   const userID = generateRandomString(); // Creates a new user in the Users object
-//   users[userID] = {
-//     id: userID,
-//     email: req.body['email'],
-//     password: req.body['password']
-//   }
-// };
+const addNewUser = function(email, password) {
+  const userID = generateRandomString(); // Creates a new user in the Users object
+  let newUserEmail = req.body['email'];
+  let newUserPassword = req.body['password'];
+  users[userID] = {
+    id: userID,
+    email: newUserEmail,
+    password: newUserPassword
+  }
+};
 
 const getUser = function(email, password){
   for(let key in users){ // key = string index of users
@@ -158,6 +160,7 @@ app.post("/login", (req, res) => {
     res.redirect(`/urls`);
   } else {
     res.status(403).send("Email and/or Password does not match.  Status code 403");
+    console.log(res.statusCode)
   }
 });
 
