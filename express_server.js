@@ -31,12 +31,12 @@ const users = {
 };
 
 const userExists = function(email) {
-  for (const [id, user] of Object.entries(users)) {
+  for (const [id, user] of Object.entries(users)) {  // Iterates over the objects of object users
     if (email === user.email){
-      return true
+      return true;
     }
   }
-  return false
+  return false;
 };
 
 const bodyParser = require("body-parser");
@@ -81,13 +81,13 @@ app.get("/register", (req, res) => {
   res.render("urls_register", templateVars);
 });
 
+
 app.post("/register", (req, res) => {
   if (req.body['email'] === "" || req.body['password'] === "") { // if the user enters an empty field its rejected
     let userError = req.body.statusCode = 400; // Resets the status code of the page
     res.send(`Status Code: ${userError}`);
-  } else if (userExists(req.body["email"])){
+  } else if (userExists(req.body["email"])){ //check is the user email is taken
     userError = req.body.statusCode = 400; 
-    console.log(userError)
     res.send(`Status Code: ${userError}. User email already taken`);
   } else {
 
@@ -110,6 +110,12 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);  // redirects to :shortURL page
 });
 
+app.get("/login", (req, res) => {
+   // console.log(res)
+   const templateVars = {users: req.cookies["user_id"]};
+   res.render("urls_login", templateVars);
+  
+});
 
 app.post("/login", (req, res) => {
   let username = req.body.username;
