@@ -74,11 +74,20 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  if (req.body['email'] === "" || req.body['password'] === "") {
-    res.send('StatusCode: 400');
-    // if (req.body['email'=== users.);
+  if (req.body['email'] === "" || req.body['password'] === "") { // if the user enters an empty field its rejected
+    let userError = req.body.statusCode = 400; // Resets the status code of the page
+    res.send(`Status Code: ${userError}`);
   } else {
     
+      for (let key in users) {
+        console.log(key)
+        let insideKeys = users[key];
+        // for (let email in insideKeys) {
+          //   if (email === req.body['email']) {
+        //     res.send('Status Code: 400.  User email already taken.');
+        //   }
+        // }
+
     const userID = generateRandomString(); // Creates a new user in the Users object
     users[userID] = {
       id: userID,
@@ -88,7 +97,11 @@ app.post("/register", (req, res) => {
     console.log(users);
     res.cookie('userID', userID) // Sets the user object to a cookie
     res.redirect('/urls');
-  }
+    }
+
+} 
+  
+
 });
 
 app.post("/urls", (req, res) => {
