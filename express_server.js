@@ -87,28 +87,18 @@ app.get("/", (req, res) => {
 
 app.get("/urls", (req, res) => {
   const user = users[req.cookies['user_id']];
-  const templateVars = {urls: urlDatabase, cookieUser: user};
+  const templateVars = {urls: urlDatabase, userObject: user};
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
   const user = users[req.cookies['user_id']];
-  // if (!user) {
-  //   res.redirect("/login");
-  //   return;
-  // }
-  const templateVars = {cookieUser: user};
+  if (!user) {
+    res.redirect("/login");
+    return;
+  }
+  const templateVars = {userObject: user};
   res.render("urls_new", templateVars);
-  // for (key in users) {
-  //   console.log(users[key]['id']);
-  //   console.log(templateVars.cookieUser)
-  //   if (users[key]['id'] === templateVars.cookieUser) {
-  //     console.log(true);
-  //     res.render("urls_new", templateVars);
-  //   } else if (users[key]['id'] !== templateVars.cookieUser) {
-  //     res.redirect("/login");
-  //   }
-  // }
 });
 
 
@@ -116,7 +106,7 @@ app.get("/urls/:shortURL", (req, res) => {
   // const templateVars = { shortURL: req.params.shortURL, longURL: req.params.longURL };
   let s = req.params.shortURL;
   // console.log(s);
-  const templateVars = { shortURL: s, longURL: urlDatabase[s], cookieUser: req.cookies["user_id"] };
+  const templateVars = { shortURL: s, longURL: urlDatabase[s], userObject: req.cookies["user_id"] };
   res.render("urls_show", templateVars);
 });
 
@@ -130,7 +120,7 @@ app.get("/hello", (req, res) => {
 
 app.get("/register", (req, res) => {
   // console.log(res)
-  const templateVars = {cookieUser: req.cookies["user_id"]};
+  const templateVars = {userObject: req.cookies["user_id"]};
   res.render("urls_register", templateVars);
 });
 
@@ -156,7 +146,7 @@ app.post("/urls", (req, res) => {
 
 app.get("/login", (req, res) => {
    // This key-value pair maps between ejs variables (keys) and JS variables (values)
-   const templateVars = {"cookieUser": req.cookies["user_id"]};
+   const templateVars = {"userObject": req.cookies["user_id"]};
    res.render("urls_login.ejs", templateVars);
 });
 
@@ -188,9 +178,7 @@ app.get("/u/:shortURL", (req, res) => {
 
 // Update 
 app.post("/urls/:shortURL/update", (req, res) => {
-  console.log(req) // prints out the whole page behind the scenes in the terminal
   const shortURL = req.params.shortURL;
-  console.log(`Same shortURL: ${shortURL}`);
   const longURL = req.body.longURL;
   // res.send(`Updated long URL: ${longURL}`); // had it print out for the user to see
   urlDatabase[shortURL] = longURL;
