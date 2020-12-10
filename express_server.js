@@ -86,7 +86,9 @@ app.post("/register", (req, res) => {
     let userError = req.body.statusCode = 400; // Resets the status code of the page
     res.send(`Status Code: ${userError}`);
   } else if (userExists(req.body["email"])){
-    res.send("Status Code: 400. User email already taken");
+    userError = req.body.statusCode = 400; 
+    console.log(userError)
+    res.send(`Status Code: ${userError}. User email already taken`);
   } else {
 
     const userID = generateRandomString(); // Creates a new user in the Users object
