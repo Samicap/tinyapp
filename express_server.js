@@ -33,6 +33,15 @@ function generateRandomString() {
   return randomString;
 };
 
+// const addNewUser = function(email, password) {
+//   const userID = generateRandomString(); // Creates a new user in the Users object
+//   users[userID] = {
+//     id: userID,
+//     email: req.body['email'],
+//     password: req.body['password']
+//   }
+// };
+
 const getUser = function(email, password){
   for(let key in users){ // key = string index of users
     if(users[key].email === email && users[key].password === password){
@@ -41,6 +50,19 @@ const getUser = function(email, password){
     }
   }
 };
+
+// const getUserByEmail = function(email, password) {  // trying to create a function to return error codes if email / password does not match.
+//   for (let userKey in users) {
+//     if (users[userKey].email !== email) {
+//       let errorMessage = "Cannot find that email";
+//       res.status(403).send(errorMessage);
+//     } else {
+//       if (users[userKey].password === password) {
+
+//       }
+//     }
+//   }
+// };
 
 const userExists = function(email) {
   for (const [id, user] of Object.entries(users)) {  // Iterates over the objects of object users
@@ -127,15 +149,15 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  let username = req.body["email"];
+  let userEmail = req.body["email"];
   let password = req.body["password"];
-  let userFound = getUser(username, password);
+  let userFound = getUser(userEmail, password);
 
   if (userFound) {
     res.cookie('user_id', userFound);
     res.redirect(`/urls`);
   } else {
-    res.send("FAILED LOGIN");
+    res.status(403).send("Email and/or Password does not match.  Status code 403");
   }
 });
 
