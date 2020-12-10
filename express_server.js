@@ -49,12 +49,12 @@ app.get("/", (req, res) => {
 
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase, users: req.cookies["user_id"]};
+  const templateVars = {urls: urlDatabase, cookieUser: req.cookies["user_id"]};
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = {users: req.cookies["user_id"]};
+  const templateVars = {cookieUser: req.cookies["user_id"]};
   res.render("urls_new", templateVars);
 });
 
@@ -63,7 +63,7 @@ app.get("/urls/:shortURL", (req, res) => {
   // const templateVars = { shortURL: req.params.shortURL, longURL: req.params.longURL };
   let s = req.params.shortURL;
   // console.log(s);
-  const templateVars = { shortURL: s, longURL: urlDatabase[s], users: req.cookies["user_id"] };
+  const templateVars = { shortURL: s, longURL: urlDatabase[s], cookieUser: req.cookies["user_id"] };
   res.render("urls_show", templateVars);
 });
 
@@ -77,7 +77,7 @@ app.get("/hello", (req, res) => {
 
 app.get("/register", (req, res) => {
   // console.log(res)
-  const templateVars = {users: req.cookies["user_id"]};
+  const templateVars = {cookieUser: req.cookies["user_id"]};
   res.render("urls_register", templateVars);
 });
 
@@ -111,15 +111,15 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-   // console.log(res)
-   const templateVars = {users: req.cookies["user_id"]};
-   res.render("urls_login", templateVars);
-  
+   // This key-value pair maps between ejs variables (keys) and JS variables (values)
+   const templateVars = {"cookieUser": req.cookies["user_id"]};
+   res.render("urls_login.ejs", templateVars);
 });
 
 app.post("/login", (req, res) => {
-  let username = req.body.username;
+  let username = req.body["email"];
   let result = getUser(username);
+
   if (result) {
     res.cookie('user_id', result);
     res.redirect(`/urls`);
@@ -130,6 +130,7 @@ app.post("/login", (req, res) => {
 function getUser(email){
   for(let key in users){
     if(users[key].email === email){
+      console.log(users[key].email, email)
       return users[key];
     }
   }
