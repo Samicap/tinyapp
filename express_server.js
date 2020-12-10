@@ -118,13 +118,12 @@ app.get("/register", (req, res) => {
 
 app.post("/register", (req, res) => {
   if (req.body['email'] === "" || req.body['password'] === "") { // if the user enters an empty field its rejected
-    let userError = req.body.statusCode = 400; // Resets the status code of the page
-    res.send(`Status Code: ${userError}`);
+    res.status(400).send("Email and/or Password cannot be empty. Status code 400.")
   } else if (userExists(req.body["email"])){ //check is the user email is taken
-    userError = req.body.statusCode = 400; 
-    res.send(`Status Code: ${userError}. User email already taken`);
+    res.status(400).send("User email already exists. Try loggin in. Status code 400.")
+    console.log(res.statusCode)
   } else {
-
+ 
     const userID = generateRandomString(); // Creates a new user in the Users object
     users[userID] = {
       id: userID,
