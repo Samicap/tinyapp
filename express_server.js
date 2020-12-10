@@ -35,38 +35,30 @@ function generateRandomString() {
 
 const addNewUser = function(email, password) {
   const userID = generateRandomString(); // Creates a new user in the Users object
-  let newUserEmail = req.body['email'];
-  let newUserPassword = req.body['password'];
+
   users[userID] = {
     id: userID,
-    email: newUserEmail,
-    password: newUserPassword
+    email: email,
+    password: password
   }
+
+  return userID;
 };
 
 const getUser = function(email, password){
   for(let key in users){ // key = string index of users
-    if(users[key].email === email && users[key].password === password){
-      console.log(users[key].email, email)
-      return users[key];
+    if(users[key].email === email && password !== ""){
+      
+      if (users[key].password === password) {
+        return users[key];
+      } else {
+        return null;
+      }
     }
   }
 };
 
-// const getUserByEmail = function(email, password) {  // trying to create a function to return error codes if email / password does not match.
-//   for (let userKey in users) {
-//     if (users[userKey].email !== email) {
-//       let errorMessage = "Cannot find that email";
-//       res.status(403).send(errorMessage);
-//     } else {
-//       if (users[userKey].password === password) {
-
-//       }
-//     }
-//   }
-// };
-
-const userExists = function(email) {
+const userEmailExists = function(email) {
   for (const [id, user] of Object.entries(users)) {  // Iterates over the objects of object users
     if (email === user.email){
       return true;
@@ -119,19 +111,13 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
   if (req.body['email'] === "" || req.body['password'] === "") { // if the user enters an empty field its rejected
     res.status(400).send("Email and/or Password cannot be empty. Status code 400.")
-  } else if (userExists(req.body["email"])){ //check is the user email is taken
-    res.status(400).send("User email already exists. Try loggin in. Status code 400.")
-    console.log(res.statusCode)
+  } else if (userEmailExists(req.body["email"])){ //check is the user email is taken
+    res.status(400).send("User email already exists. Try logging in. Status code 400.")
   } else {
- 
-    const userID = generateRandomString(); // Creates a new user in the Users object
-    users[userID] = {
-      id: userID,
-      email: req.body['email'],
-      password: req.body['password']
-    };
+    let userID = addNewUser(email=req.body["email"], password=req.body["password"])
+
     console.log(users);
-    res.cookie('userID', userID) // Sets the user object to a cookie
+    res.cookie('user_id', userID) // Sets the user object to a cookie
     res.redirect('/urls');
   }
 });
@@ -152,14 +138,20 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   let userEmail = req.body["email"];
   let password = req.body["password"];
-  let userFound = getUser(userEmail, password);
 
-  if (userFound) {
-    res.cookie('user_id', userFound);
+  let userValid = getUser(userEmail, password);
+
+  if (!userEmailExists(userEmail)) {
+    res.status(403).send("Email not match any existing users.  Status code 403");
+  }
+
+  if (userValid) {
+    // both email and password match
+    res.cookie('user_id', userValid.id);
     res.redirect(`/urls`);
-  } else {
-    res.status(403).send("Email and/or Password does not match.  Status code 403");
-    console.log(res.statusCode)
+  }
+  else {
+    res.status(403).send("Password does not match user.  Status code 403");
   }
 });
 
