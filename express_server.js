@@ -2,14 +2,13 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const cookieParser = require('cookie-parser');
-
-function generateRandomString() {
-  let randomString = Math.random().toString(36).substring(6);
-  return randomString;
-};
+const bodyParser = require("body-parser");
 
 app.set("view engine", "ejs");
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({extended: true}));
+
+
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -22,12 +21,25 @@ const users = {
     email: "user@example.com", 
     password: "purple-monkey-dinosaur"
   },
- "user2RandomID": {
+  "user2RandomID": {
     id: "user2RandomID", 
     email: "user2@example.com", 
     password: "dishwasher-funk"
   }
+};
 
+function generateRandomString() {
+  let randomString = Math.random().toString(36).substring(6);
+  return randomString;
+};
+
+const getUser = function(email, password){
+  for(let key in users){ // key = string index of users
+    if(users[key].email === email && users[key].password === password){
+      console.log(users[key].email, email)
+      return users[key];
+    }
+  }
 };
 
 const userExists = function(email) {
@@ -39,8 +51,6 @@ const userExists = function(email) {
   return false;
 };
 
-const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({extended: true}));
 
 
 app.get("/", (req, res) => {
@@ -119,23 +129,15 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   let username = req.body["email"];
   let password = req.body["password"];
-  let result = getUser(username, password);
+  let userFound = getUser(username, password);
 
-  if (result) {
-    res.cookie('user_id', result);
+  if (userFound) {
+    res.cookie('user_id', userFound);
     res.redirect(`/urls`);
   } else {
     res.send("FAILED LOGIN");
   }
 });
-function getUser(email, password){
-  for(let key in users){ // key = string index of users
-    if(users[key].email === email && users[key].password === password){
-      console.log(users[key].email, email)
-      return users[key];
-    }
-  }
-};
 
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL // this gets the :shortURL
