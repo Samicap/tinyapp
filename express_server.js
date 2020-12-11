@@ -4,7 +4,7 @@ const PORT = 8080;
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
-
+const { getUserByEmail } = require('./helpers');
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -47,15 +47,6 @@ const addNewUser = function (email, password) {
     hashedPassword: bcrypt.hashSync(password, 10)
   };
   return userID;
-};
-
-
-const getUserByEmail = function (email, usersDatabase) {
-  for (let key in usersDatabase) { // key = string index of users
-    if (userDatabase[key].email === email) {
-      return usersDatabase[key];
-    }
-  }
 };
 
 
@@ -127,8 +118,11 @@ app.post("/register", (req, res) => {
     res.status(400).send("Email and/or Password cannot be empty. Status code 400.");
     return;
   }
-
-  const user = getUserByEmail(email);
+  console.log("baby")
+  console.log("users", users)
+  console.log(email)
+  console.log("password", password)
+  const user = getUserByEmail(email, users);
   if (user) {
     res.status(400).send("User email already exists. Try logging in. Status code 400.");
     return;
