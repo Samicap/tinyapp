@@ -191,12 +191,7 @@ app.post("/login", (req, res) => {
 
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
-  console.log("short URL:", shortURL)
-  console.log("hit")
-  console.log(urlDatabase)
-  // console.log(urlDatabase[shortURL]['longURL'])
   const goToLongURL = urlDatabase[shortURL]['longURL']
-  // console.log(goToLongURL)
   res.redirect("http://" + goToLongURL);
 });
 
