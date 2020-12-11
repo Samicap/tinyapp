@@ -98,9 +98,6 @@ app.get("/", (req, res) => {
 app.get("/urls", (req, res) => {
   const user = users[req.cookies['user_id']];
   const templateVars = {urls: urlDatabase, userObject: user}; // long url is {object object}
-  console.log("hello")
-  console.log(user)
-  console.log(urlDatabase)
   res.render("urls_index", templateVars);
 });
 
@@ -119,7 +116,11 @@ app.get("/urls/:shortURL", (req, res) => {
   const user = users[req.cookies['user_id']];
   let shortURL = req.params.shortURL;
   let newlongURL = urlDatabase[shortURL]['longURL']; // there is no long url in the req.params or req body this is a BUGG!
+  console.log(newlongURL)
   const templateVars = { shortURL: shortURL, longURL: newlongURL, userObject: user };
+  console.log("app.get?:shortURL  Baby please")
+  console.log(shortURL)
+  console.log(templateVars)
   res.render("urls_show", templateVars);
 });
 
@@ -185,13 +186,16 @@ app.post("/login", (req, res) => {
   }
 });
 
-app.get("/u/:shortURL", (req, res) => {
-  const shortURL = req.params.shortURL // this gets the :shortURL
-  const longURL = urlDatabase[shortURL][longURL]; // How to do i get the long url?
+app.get("/:shortURL", (req, res) => {
+  const shortURL = req.params.shortURL 
+  console.log(shortURL)
   console.log("hit")
-  console.log(longURL)
-  res.send("fucked upp longURL")
-  // res.redirect(longURL);
+  console.log(urlDatabase)
+  // console.log(urlDatabase[shortURL]['longURL'])
+  // const goToLongURL = urlDatabase[shortURL]['longURL']
+  // console.log(goToLongURL)
+  res.send("hello")
+  // res.redirect(goToLongURL);
 });
 
 // Update 
