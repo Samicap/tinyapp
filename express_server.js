@@ -81,6 +81,13 @@ const userEmailExists = function(email) {
   return false;
 };
 
+// const urlsForUser = function(id) {
+//   const user = users[req.cookies['user_id']];
+  // if (user === urlDatabase[user]) {
+  //   console.log(urlDatabase[user][urls])
+  // }
+  // returns URLs of loggin in user
+// };
 
 
 app.get("/", (req, res) => {
@@ -90,7 +97,10 @@ app.get("/", (req, res) => {
 
 app.get("/urls", (req, res) => {
   const user = users[req.cookies['user_id']];
-  const templateVars = {urls: urlDatabase, userObject: user};
+  const templateVars = {urls: urlDatabase, userObject: user}; // long url is {object object}
+  // console.log("hello")
+  // console.log(user)
+  // console.log(urlDatabase)
   res.render("urls_index", templateVars);
 });
 
@@ -107,13 +117,13 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {
   const user = users[req.cookies['user_id']];
-  console.log("hello111")
-  console.log(req);
+  // console.log("hello111")
+  // console.log(req);
   let s = req.params.shortURL;
   let newlongURL = urlDatabase.longURL; // there is no long url in the req.params or req body this is a BUGG!
   const templateVars = { shortURL: s, longURL: newlongURL, userObject: user };
 
-  console.log("template vars:", templateVars)
+  // console.log("template vars:", templateVars)
   res.render("urls_show", templateVars);
 });
 
@@ -150,7 +160,6 @@ app.post("/urls", (req, res) => {
   const user = users[req.cookies['user_id']];
   const userID = user.id;
   urlDatabase[shortURL] = {longURL, userID}; // assigns newly created key: value pair to urlDatabase object
-  // console.log(urlDatabase)
   res.redirect(`/urls/${shortURL}`);  // redirects to :shortURL page
 });
 
@@ -183,15 +192,23 @@ app.post("/login", (req, res) => {
 
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL // this gets the :shortURL
-  const longURL = urlDatabase[shortURL]; // How to do i get the long url?
-  res.redirect(longURL);
+  const longURL = urlDatabase[shortURL][longURL]; // How to do i get the long url?
+  console.log("hit")
+  console.log(longURL)
+  res.send("fucked upp longURL")
+  // res.redirect(longURL);
 });
 
 // Update 
 app.post("/urls/:shortURL/update", (req, res) => {
+  const user = users[req.cookies['user_id']];
+  const userID = user.id;
   const shortURL = req.params.shortURL;
-  const longURL = req.body.longURL;
-  urlDatabase[shortURL] = longURL;
+  const longURL = req.body.longURL; // this is undefined
+  console.log("baby")
+  console.log(longURL)
+  urlDatabase[shortURL] = {longURL: longURL, userID: userID} 
+  console.log(urlDatabase)
   res.redirect('/urls');
 
 });
