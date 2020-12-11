@@ -96,22 +96,24 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   const user = users[req.cookies['user_id']];
-  console.log(user)
   if (!user) {
     res.redirect("/login");
     return;
   }
   const templateVars = {userObject: user};
-  console.log(templateVars)
   res.render("urls_new", templateVars);
 });
 
 
 app.get("/urls/:shortURL", (req, res) => {
   const user = users[req.cookies['user_id']];
-  // const templateVars = { shortURL: req.params.shortURL, longURL: req.params.longURL };
+  console.log("hello111")
+  console.log(req);
   let s = req.params.shortURL;
-  const templateVars = { shortURL: s, longURL: urlDatabase[s], userObject: user };
+  let newlongURL = urlDatabase.longURL; // there is no long url in the req.params or req body this is a BUGG!
+  const templateVars = { shortURL: s, longURL: newlongURL, userObject: user };
+
+  console.log("template vars:", templateVars)
   res.render("urls_show", templateVars);
 });
 
@@ -124,7 +126,8 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  const templateVars = {userObject: req.cookies["user_id"]};
+  const user = users[req.cookies['user_id']];
+  const templateVars = {userObject: user};
   res.render("urls_register", templateVars);
 });
 
@@ -146,16 +149,15 @@ app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;  // creates new vale for longURL
   const user = users[req.cookies['user_id']];
   const userID = user.id;
-  // console.log("hello")
-  // console.log(user)
   urlDatabase[shortURL] = {longURL, userID}; // assigns newly created key: value pair to urlDatabase object
   // console.log(urlDatabase)
   res.redirect(`/urls/${shortURL}`);  // redirects to :shortURL page
 });
 
 app.get("/login", (req, res) => {
+  const user = users[req.cookies['user_id']];
    // This key-value pair maps between ejs variables (keys) and JS variables (values)
-   const templateVars = {"userObject": req.cookies["user_id"]};
+   const templateVars = {userObject: user};
    res.render("urls_login.ejs", templateVars);
 });
 
