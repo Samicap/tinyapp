@@ -63,7 +63,7 @@ const getUser = function(email, password){
   for(let key in users){ // key = string index of users
     if(users[key].email === email && password !== ""){
       
-      if (users[key].password === password) {
+      if (bcrypt.compareSync(password, users[key].hashedPassword)) {
         return users[key];
       } else {
         return null;
