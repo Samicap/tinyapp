@@ -153,9 +153,11 @@ app.post("/register", (req, res) => {
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();  // Generates random string for a key
   const longURL = req.body.longURL;  // creates new vale for longURL
-  const user = users[req.cookies['user_id']];
-  const userID = user.id;
+  const userID = users[req.cookies['user_id']].id;
+  console.log("butt")
+  console.log(userID)
   urlDatabase[shortURL] = {longURL, userID}; // assigns newly created key: value pair to urlDatabase object
+  console.log(urlDatabase)
   res.redirect(`/urls/${shortURL}`);  // redirects to :shortURL page
 });
 
