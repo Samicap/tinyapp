@@ -117,13 +117,9 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {
   const user = users[req.cookies['user_id']];
-  // console.log("hello111")
-  // console.log(req);
-  let s = req.params.shortURL;
-  let newlongURL = urlDatabase.longURL; // there is no long url in the req.params or req body this is a BUGG!
-  const templateVars = { shortURL: s, longURL: newlongURL, userObject: user };
-
-  // console.log("template vars:", templateVars)
+  let shortURL = req.params.shortURL;
+  let newlongURL = urlDatabase[shortURL]['longURL']; // there is no long url in the req.params or req body this is a BUGG!
+  const templateVars = { shortURL: shortURL, longURL: newlongURL, userObject: user };
   res.render("urls_show", templateVars);
 });
 
@@ -204,14 +200,11 @@ app.post("/urls/:shortURL/update", (req, res) => {
   const user = users[req.cookies['user_id']];
   const userID = user.id;
   const shortURL = req.params.shortURL;
-  const longURL = req.body.longURL; // this is undefined
-  console.log("baby")
-  console.log(longURL)
+  const longURL = req.body.longURL; 
   urlDatabase[shortURL] = {longURL: longURL, userID: userID} 
-  console.log(urlDatabase)
   res.redirect('/urls');
-
 });
+
 app.post("/logout", (req, res) => {
   res.clearCookie('user_id');
   res.redirect("/urls");
