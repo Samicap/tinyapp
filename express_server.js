@@ -98,9 +98,9 @@ app.get("/", (req, res) => {
 app.get("/urls", (req, res) => {
   const user = users[req.cookies['user_id']];
   const templateVars = {urls: urlDatabase, userObject: user}; // long url is {object object}
-  // console.log("hello")
-  // console.log(user)
-  // console.log(urlDatabase)
+  console.log("hello")
+  console.log(user)
+  console.log(urlDatabase)
   res.render("urls_index", templateVars);
 });
 
