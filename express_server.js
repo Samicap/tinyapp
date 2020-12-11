@@ -114,12 +114,17 @@ app.get("/urls/new", (req, res) => {
 });
 
 
+
 app.get("/urls/:shortURL", (req, res) => {
   const user = users[req.cookies['user_id']];
   let shortURL = req.params.shortURL;
   let newlongURL = urlDatabase[shortURL]['longURL']; // there is no long url in the req.params or req body this is a BUGG!
-  const templateVars = { shortURL: shortURL, longURL: newlongURL, userObject: user };
-  res.render("urls_show", templateVars);
+  if (req.cookies['user_id'] === urlDatabase[shortURL]['userID']) {
+    const templateVars = { shortURL: shortURL, longURL: newlongURL, userObject: user };
+    res.render("urls_show", templateVars);
+  } else {
+    res.sendStatus(403);
+  }
 });
 
 app.get("/urls.json", (req, res) => {
@@ -192,13 +197,18 @@ app.get("/u/:shortURL", (req, res) => {
 
 
 // Update 
-app.post("/urls/:shortURL/update", (req, res) => {
-  const userID = users[req.cookies['user_id']].id;
+app.post("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   const longURL = req.body.longURL; 
-  urlDatabase[shortURL] = {longURL: longURL, userID: userID} 
-  res.redirect('/urls');
+  const user = users[req.cookies['user_id']];
+  if (req.cookies['user_id']=== urlDatabase[shortURL]['userID']) {
+    urlDatabase[shortURL] = {longURL: longURL, userID: user.id};
+    res.redirect('/urls');
+    } else {
+    res.redirect("/login");
+  }
 });
+
 
 app.post("/logout", (req, res) => {
   res.clearCookie('user_id');
@@ -207,8 +217,13 @@ app.post("/logout", (req, res) => {
 
 app.post("/urls/:shortURL/delete", (req, res) => {  // deletes urls
   const shortURL = req.params.shortURL; // accesses keys in urlDatabase
-  delete urlDatabase[shortURL]
-  res.redirect('/urls');
+  const user = users[req.cookies['user_id']];
+  if (req.cookies['user_id']=== urlDatabase[shortURL]['userID']) {
+    delete urlDatabase[shortURL];
+    res.redirect('/urls');
+    } else {
+    res.redirect("/login");
+  }
 });
 
 
