@@ -118,11 +118,7 @@ app.get("/urls/:shortURL", (req, res) => {
   const user = users[req.cookies['user_id']];
   let shortURL = req.params.shortURL;
   let newlongURL = urlDatabase[shortURL]['longURL']; // there is no long url in the req.params or req body this is a BUGG!
-  console.log(newlongURL)
   const templateVars = { shortURL: shortURL, longURL: newlongURL, userObject: user };
-  console.log("app.get?:shortURL  Baby please")
-  console.log(shortURL)
-  console.log(templateVars)
   res.render("urls_show", templateVars);
 });
 
@@ -158,7 +154,6 @@ app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;  // creates new vale for longURL
   const userID = users[req.cookies['user_id']].id;
   urlDatabase[shortURL] = {longURL, userID}; // assigns newly created key: value pair to urlDatabase object
-  console.log(urlDatabase)
   res.redirect(`/urls/${shortURL}`);  // redirects to :shortURL page
 });
 
