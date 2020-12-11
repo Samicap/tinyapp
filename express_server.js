@@ -124,7 +124,6 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  // console.log(res)
   const templateVars = {userObject: req.cookies["user_id"]};
   res.render("urls_register", templateVars);
 });
@@ -145,7 +144,12 @@ app.post("/register", (req, res) => {
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();  // Generates random string for a key
   const longURL = req.body.longURL;  // creates new vale for longURL
-  urlDatabase[shortURL] = longURL; // assigns newly created key: value pair to urlDatabase object
+  const user = users[req.cookies['user_id']];
+  const userID = user.id;
+  // console.log("hello")
+  // console.log(user)
+  urlDatabase[shortURL] = {longURL, userID}; // assigns newly created key: value pair to urlDatabase object
+  // console.log(urlDatabase)
   res.redirect(`/urls/${shortURL}`);  // redirects to :shortURL page
 });
 
@@ -185,7 +189,6 @@ app.get("/u/:shortURL", (req, res) => {
 app.post("/urls/:shortURL/update", (req, res) => {
   const shortURL = req.params.shortURL;
   const longURL = req.body.longURL;
-  // res.send(`Updated long URL: ${longURL}`); // had it print out for the user to see
   urlDatabase[shortURL] = longURL;
   res.redirect('/urls');
 
