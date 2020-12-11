@@ -29,8 +29,8 @@ const users = {
 };
 
 const urlDatabase = {
-  // "b2xVn2": {longURL: "http://www.lighthouselabs.ca", userID: users[req.cookies['user_id']]},
-  // "9sm5xK": {longURL: "http://www.google.com", userID: users[req.cookies['user_id']]}
+  "b2xVn2": {longURL: "http://www.lighthouselabs.ca", userID: "users[req.cookies['user_id']]"},
+  "9sm5xK": {longURL: "http://www.google.com", userID:"users[req.cookies['user_id']]"}
 };
 
 const generateRandomString = function() {
@@ -170,8 +170,8 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 
-// Update 
-app.post("/urls/:shortURL", (req, res) => {
+
+app.post("/urls/:shortURL", (req, res) => { // Update 
   const shortURL = req.params.shortURL;
   const longURL = req.body.longURL;
   const user = users[req.session['user_id']];
