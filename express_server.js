@@ -81,13 +81,15 @@ const userEmailExists = function(email) {
   return false;
 };
 
-// const urlsForUser = function(id) {
-//   const user = users[req.cookies['user_id']];
-  // if (user === urlDatabase[user]) {
-  //   console.log(urlDatabase[user][urls])
-  // }
-  // returns URLs of loggin in user
-// };
+const urlsForUser = function(id) {
+  let userURLS = {};
+  for (let shortURL in urlDatabase) {
+    if (id === urlDatabase[shortURL]["userID"]) {
+      userURLS[shortURL] = {longURL:urlDatabase[shortURL]['longURL']};  // Object literal
+    }
+  }
+  return userURLS;
+};
 
 
 app.get("/", (req, res) => {
@@ -97,7 +99,7 @@ app.get("/", (req, res) => {
 
 app.get("/urls", (req, res) => {
   const user = users[req.cookies['user_id']];
-  const templateVars = {urls: urlDatabase, userObject: user}; // long url is {object object}
+  const templateVars = {urls: urlsForUser(req.cookies['user_id']), userObject: user}; 
   res.render("urls_index", templateVars);
 });
 
@@ -156,6 +158,7 @@ app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;  // creates new vale for longURL
   const userID = users[req.cookies['user_id']].id;
   urlDatabase[shortURL] = {longURL, userID}; // assigns newly created key: value pair to urlDatabase object
+  console.log(urlDatabase)
   res.redirect(`/urls/${shortURL}`);  // redirects to :shortURL page
 });
 
@@ -186,17 +189,17 @@ app.post("/login", (req, res) => {
   }
 });
 
-app.get("/:shortURL", (req, res) => {
-  const shortURL = req.params.shortURL 
-  console.log(shortURL)
+app.get("/u/:shortURL", (req, res) => {
+  const shortURL = req.params.shortURL;
+  console.log("short URL:", shortURL)
   console.log("hit")
   console.log(urlDatabase)
   // console.log(urlDatabase[shortURL]['longURL'])
-  // const goToLongURL = urlDatabase[shortURL]['longURL']
+  const goToLongURL = urlDatabase[shortURL]['longURL']
   // console.log(goToLongURL)
-  res.send("hello")
-  // res.redirect(goToLongURL);
+  res.redirect("http://" + goToLongURL);
 });
+
 
 // Update 
 app.post("/urls/:shortURL/update", (req, res) => {
