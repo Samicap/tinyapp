@@ -43,7 +43,7 @@ const addNewUser = function(email, password) {
   users[userID] = {
     id: userID,
     email: email,
-    password: password
+    hashedPassword: bcrypt.hashSync(password, 10)
   }
 
   return userID;
