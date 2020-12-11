@@ -33,7 +33,7 @@ const urlDatabase = {
   // "9sm5xK": {longURL: "http://www.google.com", userID: users[req.cookies['user_id']]}
 };
 
-function generateRandomString() {
+const generateRandomString = function() {
   let randomString = Math.random().toString(36).substring(6);
   return randomString;
 };
@@ -118,10 +118,6 @@ app.post("/register", (req, res) => {
     res.status(400).send("Email and/or Password cannot be empty. Status code 400.");
     return;
   }
-  console.log("baby")
-  console.log("users", users)
-  console.log(email)
-  console.log("password", password)
   const user = getUserByEmail(email, users);
   if (user) {
     res.status(400).send("User email already exists. Try logging in. Status code 400.");
@@ -189,7 +185,7 @@ app.post("/urls/:shortURL", (req, res) => {
 
 
 app.post("/logout", (req, res) => {
-  req.session = null;
+  req.session = null; // Deletes cookies
   res.redirect("/urls");
 });
 
