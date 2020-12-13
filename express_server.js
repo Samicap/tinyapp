@@ -199,7 +199,6 @@ app.post("/logout", (req, res) => {
 
 app.post("/urls/:shortURL/delete", (req, res) => {  // deletes urls
   const shortURL = req.params.shortURL; // accesses keys in urlDatabase
-  const user = users[req.session['user_id']];
   if (req.session['user_id'] === urlDatabase[shortURL]['userID']) {
     delete urlDatabase[shortURL];
     res.redirect('/urls');
