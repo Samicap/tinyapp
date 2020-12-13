@@ -29,11 +29,11 @@ const users = {
 };
 
 const urlDatabase = {
-  "b2xVn2": {longURL: "http://www.lighthouselabs.ca", userID: "users[req.cookies['user_id']]"},
-  "9sm5xK": {longURL: "http://www.google.com", userID:"users[req.cookies['user_id']]"}
+  "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: "users[req.cookies['user_id']]" },
+  "9sm5xK": { longURL: "http://www.google.com", userID: "users[req.cookies['user_id']]" }
 };
 
-const generateRandomString = function() {
+const generateRandomString = function () {
   let randomString = Math.random().toString(36).substring(6);
   return randomString;
 };
@@ -62,7 +62,11 @@ const urlsForUser = function (id) {
 
 
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  const user = users[req.session['user_id']];
+  if (!user) {
+    res.send("Hello!");
+  }
+  res.redirect("/urls");
 });
 
 
@@ -70,7 +74,7 @@ app.get("/urls", (req, res) => {
   const user = users[req.session['user_id']];
   const templateVars = { urls: urlsForUser(req.session['user_id']), userObject: user };
   if (!user) {
-    res.send("user must me logged in to view this page.");
+    res.send("User must be logged in to view this page.");
     return;
   }
   res.render("urls_index", templateVars);
@@ -88,7 +92,7 @@ app.get("/urls/new", (req, res) => {
 
 
 
-app.get("/urls/:shortURL", (req, res) => {
+app.get("/urls/:shortURL", (req, res) => {  // This doenst work!
   const user = users[req.session['user_id']];
   let shortURL = req.params.shortURL;
   let newlongURL = urlDatabase[shortURL]['longURL']; // there is no long url in the req.params or req body this is a BUGG!
