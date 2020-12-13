@@ -69,6 +69,10 @@ app.get("/", (req, res) => {
 app.get("/urls", (req, res) => {
   const user = users[req.session['user_id']];
   const templateVars = { urls: urlsForUser(req.session['user_id']), userObject: user };
+  if (!user) {
+    res.send("user must me logged in to view this page.");
+    return;
+  }
   res.render("urls_index", templateVars);
 });
 
